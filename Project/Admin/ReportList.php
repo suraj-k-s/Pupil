@@ -17,7 +17,7 @@ if (isset($_POST['btn_search'])) {
         $endDate = clone $startDate;
         $endDate->modify('last day of this month');
         $interval = new DateInterval('P1D');
-        $dateRange = new DatePeriod($startDate, $interval, $endDate);
+        $dateRange = new DatePeriod($startDate, $interval, $endDate->modify('+1 day'));
 
         $heading = "Report for " . $startDate->format('F Y');
     } else {
@@ -110,6 +110,7 @@ if (isset($_POST['btn_search'])) {
                     echo "<td style='text-align:center'>L</td>";
                     $L++;
                 } else {
+                    
                     $selQ = "SELECT * FROM tbl_attendance WHERE attendance_date = '$formattedDate' AND student_id = '" . $data["student_id"] . "'";
                     $resultQ = $con->query($selQ);
 
@@ -126,7 +127,14 @@ if (isset($_POST['btn_search'])) {
                 }
             }
             $Data = $H/2;
-            $attandance = (($P+$Data)/($P+$A+$H))*100;  
+            if($Data > 0)
+            {
+                $attandance = (($P+$Data)/($P+$A+$H))*100;
+            }  
+            else
+            {
+                $attandance = 0;
+            }
             echo "<td style='text-align:center'>".$attandance."</td>";
             echo "</tr>";
             $L =0;
